@@ -41,4 +41,15 @@ bool Circle::is_right() const{
     return right;
 }
 
-ostream& operator <<(ostream& out, const Circle & C1);
+ostream& operator <<(ostream& out, const Circle & C){
+    out << "Center : (" << C.x_center << "," << C.y_center << ") " << endl;
+    out << "Minimum turning radius = " << C.r_min << endl;
+    out << "This is a ";
+    if(C.right){
+        out << "right circle." << endl;
+    }
+    else{
+        out << "left circle." << endl;
+    }
+	return out;
+}

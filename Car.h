@@ -28,7 +28,7 @@ public:
 	// Inequality comparison 
 	friend bool operator !=(Car const & C1, Car const & C2);
 	// cout operator (print)
-	friend ostream& operator <<(ostream& out, const Car & C1);
+	friend ostream& operator <<(ostream& out, const Car & C);
 
 private:
 	// Memeber variables

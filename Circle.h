@@ -34,7 +34,7 @@ public:
 	bool is_right() const;
     
     // cout operator (print)
-	friend ostream& operator <<(ostream& out, const Circle & C1);
+	friend ostream& operator <<(ostream& out, const Circle & C);
 
 
 private:
