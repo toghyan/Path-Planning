@@ -45,7 +45,7 @@ vector<double> PathPlanner::RSR(){
         Rotation_C1 -= 2 * M_PI;
     }
     // Amount of rotation on the end circle
-    double Rotation_C2 = alpha + M_PI_2 - thata_end;
+    double Rotation_C2 = alpha + M_PI_2 - theta_end;
     if(Rotation_C2 < 0){
         Rotation_C2 += 2 * M_PI;
     }
@@ -55,7 +55,7 @@ vector<double> PathPlanner::RSR(){
  
     path[0] = Rotation_C1 * r_min;
     path[1] = sqrt(pow(x_center_end - x_center_start,2) + pow(y_center_end - y_center_start,2));
-    path[3] = Rotation_C2 * r_min;
+    path[2] = Rotation_C2 * r_min;
     
     return path;
 }
@@ -86,7 +86,7 @@ vector<double> PathPlanner::LSL(){
         Rotation_C1 -= 2 * M_PI;
     }
     // Amount of rotation on the end circle
-    double Rotation_C2 = thata_end - alpha + M_PI_2;
+    double Rotation_C2 = theta_end - alpha + M_PI_2;
     if(Rotation_C2 < 0){
         Rotation_C2 += 2 * M_PI;
     }
@@ -96,7 +96,7 @@ vector<double> PathPlanner::LSL(){
     
     path[0] = Rotation_C1 * r_min;
     path[1] = sqrt(pow(x_center_end - x_center_start,2) + pow(y_center_end - y_center_start,2));
-    path[3] = Rotation_C2 * r_min;
+    path[2] = Rotation_C2 * r_min;
     
     return path;
 }
