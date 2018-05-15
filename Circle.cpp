@@ -33,7 +33,7 @@ double Circle::get_yc() const{
     return y_center;
 }
 
-double get_r_min() const{
+double Circle::get_r_min() const{
     return r_min;
 }
 
