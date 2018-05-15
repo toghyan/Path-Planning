@@ -16,17 +16,17 @@ public:
     // Modifies the command string to the appropriate command and returns the duration of each command
     double * find_optimal_path(string & commands);
     // Returns the length of the RSR path
-    double RSR();
+    double RSR(Car const & start, Car const & end);
     // Returns the length of the LSL path
-    double LSL();
+    double LSL(Car const & start, Car const & end);
     // Returns the length of the LSR path
-    double LSR();
+    double LSR(Car const & start, Car const & end);
     // Returns the length of the RLS path
-    double RLS();
+    double RLS(Car const & start, Car const & end);
     // Returns the length of the RLR path
-    double RLR();
+    double RLR(Car const & start, Car const & end);
     // Returns the length of the LRL path
-    double LRL();
+    double LRL(Car const & start, Car const & end);
     
 
 };
