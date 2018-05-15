@@ -5,8 +5,8 @@ PathPlanner::PathPlanner(){
 }
 
 PathPlanner::PathPlanner(Car const & c_start, Car const & c_end, double min_turn_r, double max_velocity){
-    car_s = c_start;
-    car_e = c_end;
+    car_start = c_start;
+    car_end = c_end;
     r_min = min_turn_r;
     vel = max_velocity;
 }
@@ -22,6 +22,24 @@ vector<double> PathPlanner::find_optimal_path(string & commands){
 
 vector<double> PathPlanner::RSR(){
     vector<double> path(3);
+    // Start (right) circle center coordinates 
+    double x_center_start = car_start.get_x() + r_min * sin(car_start.get_yaw());
+    double y_center_start = car_start.get_y() - r_min * cos(car_start.get_yaw());
+    // End (right) circle center coordinates
+    double x_center_end = car_end.get_x() + r_min * sin(car_end.get_yaw());
+    double y_center_end = car_end.get_y() - r_min * cos(car_end.get_yaw());
+    
+    double alpha = atan2(y_center_end - y_center_start, x_center_end - x_center_start);
+
+    // Angle of rotation on start circle
+    double theta_start = atan2(car_start.get_y() - y_center_start, car_start.get_x() - x_center_start) - alpha - M_PI / 2;
+    // Angle of rotation on start circle
+    double theta_end = alpha + M_PI / 2 - atan2(car_end.get_y() - y_center_end, car_end.get_x() - x_center_end);
+    
+    path[0] = theta_start * r_min;
+    path[1] = sqrt(pow(x_center_end - x_center_start,2) + pow(y_center_end - y_center_start,2));
+    path[3] = theta_end * r_min;
+    
     return path;
 }
 

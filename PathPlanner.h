@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 
+
 class PathPlanner
 {
 public:
@@ -29,7 +30,7 @@ public:
     vector<double> LRL();
     
 private: 
-    Car car_s, car_e;
+    Car car_start, car_end;
     double r_min, vel;
     
 
