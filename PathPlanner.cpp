@@ -9,6 +9,7 @@ PathPlanner::PathPlanner(Car const & c_start, Car const & c_end, double min_turn
     car_end = c_end;
     r_min = min_turn_r;
     vel = max_velocity;
+    
 }
 
 PathPlanner::~PathPlanner(){
@@ -17,17 +18,23 @@ PathPlanner::~PathPlanner(){
 
 vector<double> PathPlanner::find_optimal_path(string & commands){
     vector<double> path(3);
+    // Start position left circle center coordinates 
+    double x_center_start_l = car_start.get_x() - r_min * sin(car_start.get_yaw());
+    double y_center_start_l = car_start.get_y() + r_min * cos(car_start.get_yaw());
+    // End position left circle center coordinates
+    double x_cen_end_l = car_end.get_x() - r_min * sin(car_end.get_yaw());
+    double y_cen_end_l = car_end.get_y() + r_min * cos(car_end.get_yaw());
+    // Start position right circle center coordinates 
+    double x_cen_start_r = car_start.get_x() + r_min * sin(car_start.get_yaw());
+    double y_cen_start_r = car_start.get_y() - r_min * cos(car_start.get_yaw());
+    // End position right circle center coordinates
+    double x_cen_end_r = car_end.get_x() + r_min * sin(car_end.get_yaw());
+    double y_cen_end_r = car_end.get_y() - r_min * cos(car_end.get_yaw());
     return path;
 }
 
-vector<double> PathPlanner::RSR(){
+vector<double> PathPlanner::RSR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
     vector<double> path(3);
-    // Start (right) circle center coordinates 
-    double x_center_start = car_start.get_x() + r_min * sin(car_start.get_yaw());
-    double y_center_start = car_start.get_y() - r_min * cos(car_start.get_yaw());
-    // End (right) circle center coordinates
-    double x_center_end = car_end.get_x() + r_min * sin(car_end.get_yaw());
-    double y_center_end = car_end.get_y() - r_min * cos(car_end.get_yaw());
     // Angle between the line connecting the centers and the positive x direction
     double alpha = atan2(y_center_end - y_center_start, x_center_end - x_center_start);
 
@@ -60,14 +67,8 @@ vector<double> PathPlanner::RSR(){
     return path;
 }
 
-vector<double> PathPlanner::LSL(){
+vector<double> PathPlanner::LSL(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
     vector<double> path(3);
-    // Start (left) circle center coordinates 
-    double x_center_start = car_start.get_x() - r_min * sin(car_start.get_yaw());
-    double y_center_start = car_start.get_y() + r_min * cos(car_start.get_yaw());
-    // End (left) circle center coordinates
-    double x_center_end = car_end.get_x() - r_min * sin(car_end.get_yaw());
-    double y_center_end = car_end.get_y() + r_min * cos(car_end.get_yaw());
     // Angle between the line connecting the centers and the positive x direction
     double alpha = atan2(y_center_end - y_center_start, x_center_end - x_center_start);
     
@@ -101,19 +102,12 @@ vector<double> PathPlanner::LSL(){
     return path;
 }
 
-vector<double> PathPlanner::LSR(){
+vector<double> PathPlanner::LSR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
     vector<double> path(3);
-    // Start (left) circle center coordinates 
-    double x_center_start = car_start.get_x() - r_min * sin(car_start.get_yaw());
-    double y_center_start = car_start.get_y() + r_min * cos(car_start.get_yaw());
-    
-    // End (right) circle center coordinates
-    double x_center_end = car_end.get_x() + r_min * sin(car_end.get_yaw());
-    double y_center_end = car_end.get_y() - r_min * cos(car_end.get_yaw());
     // center to center length
     double cen_to_cen = sqrt(pow(x_center_end - x_center_start,2) + pow(y_center_end - y_center_start,2));
     // Making sure the circles are not entangled
-    if(cen_to_cen > 2 * r_min){
+    if(cen_to_cen < 2 * r_min){
         throw("There is no valid RLS path!");
     }
     // angle between the line connecting the centers and the positive x direction
@@ -148,19 +142,13 @@ vector<double> PathPlanner::LSR(){
     return path;
 }
 
-vector<double> PathPlanner::RLS(){
+vector<double> PathPlanner::RLS(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
     // Initialize the vector to be returned
     vector<double> path(3);
-    // Start (right) circle center coordinates 
-    double x_center_start = car_start.get_x() + r_min * sin(car_start.get_yaw());
-    double y_center_start = car_start.get_y() - r_min * cos(car_start.get_yaw());
-    // End (left) circle center coordinates
-    double x_center_end = car_end.get_x() - r_min * sin(car_end.get_yaw());
-    double y_center_end = car_end.get_y() + r_min * cos(car_end.get_yaw());
     // center to center length
     double cen_to_cen = sqrt(pow(x_center_end - x_center_start,2) + pow(y_center_end - y_center_start,2));
     // Making sure the circles are not entangled
-    if(cen_to_cen > 2 * r_min){
+    if(cen_to_cen < 2 * r_min){
         throw("There is no valid RLS path!");
     }
     // angle between the line connecting the centers and the positive x direction
@@ -195,13 +183,87 @@ vector<double> PathPlanner::RLS(){
     return path;
 }
 
-vector<double> PathPlanner::RLR(){
+vector<double> PathPlanner::RLR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
     vector<double> path(3);
+    // center to center length
+    double cen_to_cen = sqrt(pow(x_center_end - x_center_start,2) + pow(y_center_end - y_center_start,2));
+    // Making sure the circles are not entangled
+    if(cen_to_cen > 4 * r_min){
+        throw("There is no valid RLS path!");
+    }
+    // angle between the line connecting the centers and the positive x direction
+    double alpha = atan2(y_center_end - y_center_start, x_center_end - x_center_start);
+    // Angle between the line conecting the centers and the tangent point
+    double beta = acos(cen_to_cen / (4 * r_min));
+    // Angle of car at the start circle
+    double theta_start = atan2(car_start.get_y() - y_center_start, car_start.get_x() - x_center_start);
+    // Angle of car on end circle
+    double theta_end = atan2(car_end.get_y() - y_center_end, car_end.get_x() - x_center_end);
+    // Amount of rotation on the start circle
+    double Rotation_C1 = theta_start - alpha - beta;
+    while(Rotation_C1 < 0){
+        Rotation_C1 += 2 * M_PI;
+    } 
+    while(Rotation_C1 > 2 * M_PI) {
+        Rotation_C1 -= 2 * M_PI;
+    }
+    // Amount of rotation on the middle circle
+    double Rotation_C2 = M_PI - 2 * beta;
+    // Amount of rotation on the end circle
+    double Rotation_C3 = alpha + M_PI - beta - theta_end;
+    while(Rotation_C3 < 0){
+        Rotation_C3 += 2 * M_PI;
+    }
+    while(Rotation_C3 > 2 * M_PI) {
+        Rotation_C3 -= 2 * M_PI;
+    }
+    
+    path[0] = Rotation_C1 * r_min;
+    path[1] = Rotation_C2 * r_min;
+    path[2] = Rotation_C3 * r_min;
+    
     return path;
 }
 
-vector<double> PathPlanner::LRL(){
+vector<double> PathPlanner::LRL(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
     vector<double> path(3);
+    // center to center length
+    double cen_to_cen = sqrt(pow(x_center_end - x_center_start,2) + pow(y_center_end - y_center_start,2));
+    // Making sure the circles are not entangled
+    if(cen_to_cen > 4 * r_min){
+        throw("There is no valid RLS path!");
+    }
+    // angle between the line connecting the centers and the positive x direction
+    double alpha = atan2(y_center_end - y_center_start, x_center_end - x_center_start);
+    // Angle between the line conecting the centers and the tangent point
+    double beta = acos(cen_to_cen / (4 * r_min));
+    // Angle of car at the start circle
+    double theta_start = atan2(car_start.get_y() - y_center_start, car_start.get_x() - x_center_start);
+    // Angle of car on end circle
+    double theta_end = atan2(car_end.get_y() - y_center_end, car_end.get_x() - x_center_end);
+    // Amount of rotation on the start circle
+    double Rotation_C1 = alpha + M_PI - beta - theta_start;
+    while(Rotation_C1 < 0){
+        Rotation_C1 += 2 * M_PI;
+    } 
+    while(Rotation_C1 > 2 * M_PI) {
+        Rotation_C1 -= 2 * M_PI;
+    }
+    // Amount of rotation on the middle circle
+    double Rotation_C2 = M_PI - 2 * beta;
+    // Amount of rotation on the end circle
+    double Rotation_C3 = theta_end - alpha - beta;
+    while(Rotation_C3 < 0){
+        Rotation_C3 += 2 * M_PI;
+    }
+    while(Rotation_C3 > 2 * M_PI) {
+        Rotation_C3 -= 2 * M_PI;
+    }
+    
+    path[0] = Rotation_C1 * r_min;
+    path[1] = Rotation_C2 * r_min;
+    path[2] = Rotation_C3 * r_min;
+    
     return path;
 }
 

@@ -17,17 +17,17 @@ public:
     // Modifies the command string to the appropriate command and returns the duration of each command
     vector<double> find_optimal_path(string & commands);
     // Returns the length of the RSR path
-    vector<double> RSR();
+    vector<double> RSR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     // Returns the length of the LSL path
-    vector<double> LSL();
+    vector<double> LSL(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     // Returns the length of the LSR path
-    vector<double> LSR();
+    vector<double> LSR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     // Returns the length of the RLS path
-    vector<double> RLS();
+    vector<double> RLS(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     // Returns the length of the RLR path
-    vector<double> RLR();
+    vector<double> RLR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     // Returns the length of the LRL path
-    vector<double> LRL();
+    vector<double> LRL(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     
 private: 
     Car car_start, car_end;
