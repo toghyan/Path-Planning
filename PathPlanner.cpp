@@ -31,6 +31,7 @@ vector<double> PathPlanner::find_optimal_path(string & commands){
     double y_cen_end_r = car_end.get_y() - r_min * cos(car_end.get_yaw());
     // Optimal path initialized with RSR
     vector<double> path_optimal = RSR(x_cen_start_r, y_cen_start_r, x_cen_end_r, y_cen_end_r);
+    commands = "RSR";
     // Optimal path length
     double path_length = path_optimal[0] + path_optimal[1] + path_optimal[2];
     // Place holder initialized with LSL
@@ -39,6 +40,7 @@ vector<double> PathPlanner::find_optimal_path(string & commands){
     if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
         path_optimal = path_temp;
         path_length = path_temp[0] + path_temp[1] + path_temp[2];
+        commands = "LSL";
     }
     // Checking for LSR
     if(sqrt(pow(x_cen_end_r - x_cen_start_l,2) + pow(y_cen_end_r - y_cen_start_l,2)) > 2 * r_min){
@@ -46,6 +48,7 @@ vector<double> PathPlanner::find_optimal_path(string & commands){
         if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
             path_optimal = path_temp;
             path_length = path_temp[0] + path_temp[1] + path_temp[2];
+            commands = "LSR";
         }
     }
     // Checking for RSL
@@ -54,6 +57,7 @@ vector<double> PathPlanner::find_optimal_path(string & commands){
         if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
             path_optimal = path_temp;
             path_length = path_temp[0] + path_temp[1] + path_temp[2];
+            commands = "RSL";
         }
     }
     // Checking for RLR
@@ -62,6 +66,7 @@ vector<double> PathPlanner::find_optimal_path(string & commands){
         if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
             path_optimal = path_temp;
             path_length = path_temp[0] + path_temp[1] + path_temp[2];
+            commands = "RLR";
         }
     }
     // Checking for LRL
@@ -70,6 +75,7 @@ vector<double> PathPlanner::find_optimal_path(string & commands){
         if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
             path_optimal = path_temp;
             path_length = path_temp[0] + path_temp[1] + path_temp[2];
+            commands = "LRL";
         }
     }
     
