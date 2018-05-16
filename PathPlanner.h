@@ -23,7 +23,7 @@ public:
     // Returns the length of the LSR path
     vector<double> LSR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     // Returns the length of the RLS path
-    vector<double> RLS(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
+    vector<double> RSL(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     // Returns the length of the RLR path
     vector<double> RLR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end);
     // Returns the length of the LRL path

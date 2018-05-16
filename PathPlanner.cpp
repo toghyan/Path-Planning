@@ -17,10 +17,9 @@ PathPlanner::~PathPlanner(){
 }
 
 vector<double> PathPlanner::find_optimal_path(string & commands){
-    vector<double> path(3);
     // Start position left circle center coordinates 
-    double x_center_start_l = car_start.get_x() - r_min * sin(car_start.get_yaw());
-    double y_center_start_l = car_start.get_y() + r_min * cos(car_start.get_yaw());
+    double x_cen_start_l = car_start.get_x() - r_min * sin(car_start.get_yaw());
+    double y_cen_start_l = car_start.get_y() + r_min * cos(car_start.get_yaw());
     // End position left circle center coordinates
     double x_cen_end_l = car_end.get_x() - r_min * sin(car_end.get_yaw());
     double y_cen_end_l = car_end.get_y() + r_min * cos(car_end.get_yaw());
@@ -30,7 +29,51 @@ vector<double> PathPlanner::find_optimal_path(string & commands){
     // End position right circle center coordinates
     double x_cen_end_r = car_end.get_x() + r_min * sin(car_end.get_yaw());
     double y_cen_end_r = car_end.get_y() - r_min * cos(car_end.get_yaw());
-    return path;
+    // Optimal path initialized with RSR
+    vector<double> path_optimal = RSR(x_cen_start_r, y_cen_start_r, x_cen_end_r, y_cen_end_r);
+    // Optimal path length
+    double path_length = path_optimal[0] + path_optimal[1] + path_optimal[2];
+    // Place holder initialized with LSL
+    vector<double> path_temp = LSL(x_cen_start_l, y_cen_start_l, x_cen_end_l, y_cen_end_l);
+    // Checking LSL
+    if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
+        path_optimal = path_temp;
+        path_length = path_temp[0] + path_temp[1] + path_temp[2];
+    }
+    // Checking for LSR
+    if(sqrt(pow(x_cen_end_r - x_cen_start_l,2) + pow(y_cen_end_r - y_cen_start_l,2)) > 2 * r_min){
+        path_temp = LSR(x_cen_start_l, y_cen_start_l, x_cen_end_r, y_cen_end_r);
+        if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
+            path_optimal = path_temp;
+            path_length = path_temp[0] + path_temp[1] + path_temp[2];
+        }
+    }
+    // Checking for RSL
+    if(sqrt(pow(x_cen_end_l - x_cen_start_r,2) + pow(y_cen_end_l - y_cen_start_r,2)) > 2 * r_min){
+        path_temp = RSL(x_cen_start_r, y_cen_start_r, x_cen_end_l, y_cen_end_l);
+        if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
+            path_optimal = path_temp;
+            path_length = path_temp[0] + path_temp[1] + path_temp[2];
+        }
+    }
+    // Checking for RLR
+    if(sqrt(pow(x_cen_end_r - x_cen_start_r,2) + pow(y_cen_end_r - y_cen_start_r,2)) < 4 * r_min){
+        path_temp = RLR(x_cen_start_r, y_cen_start_r, x_cen_end_r, y_cen_end_r);
+        if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
+            path_optimal = path_temp;
+            path_length = path_temp[0] + path_temp[1] + path_temp[2];
+        }
+    }
+    // Checking for LRL
+    if(sqrt(pow(x_cen_end_l - x_cen_start_l,2) + pow(y_cen_end_l - y_cen_start_l,2)) < 4 * r_min){
+        path_temp = LRL(x_cen_start_l, y_cen_start_l, x_cen_end_l, y_cen_end_l);
+        if(path_temp[0] + path_temp[1] + path_temp[2] < path_length){
+            path_optimal = path_temp;
+            path_length = path_temp[0] + path_temp[1] + path_temp[2];
+        }
+    }
+    
+    return path_optimal;
 }
 
 vector<double> PathPlanner::RSR(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
@@ -142,7 +185,7 @@ vector<double> PathPlanner::LSR(double const x_center_start, double const y_cent
     return path;
 }
 
-vector<double> PathPlanner::RLS(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
+vector<double> PathPlanner::RSL(double const x_center_start, double const y_center_start, double const x_center_end, double const y_center_end){
     // Initialize the vector to be returned
     vector<double> path(3);
     // center to center length
