@@ -16,6 +16,16 @@ PathPlanner::~PathPlanner(){
     
 }
 
+vector<double> PathPlanner::get_optimal_time(string & commands){
+    
+    vector<double> optimal_path_length = find_optimal_path(commands);
+    vector<double> command_time(3);
+    for(int i = 0; i < 3; i++){
+        command_time[i] = optimal_path_length[i] / vel;
+    }
+    return command_time;
+}
+
 vector<double> PathPlanner::find_optimal_path(string & commands){
     // Start position left circle center coordinates 
     double x_cen_start_l = car_start.get_x() - r_min * sin(car_start.get_yaw());

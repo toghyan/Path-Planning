@@ -1,6 +1,7 @@
 #ifndef PATHPLANNER_H
 #define PATHPLANNER_H
 
+#define _USE_MATH_DEFINES
 #include <math.h>
 #include "Car.h"
 #include "Circle.h"
@@ -14,6 +15,8 @@ public:
     PathPlanner();
     PathPlanner(Car const & c_start, Car const & c_end, double mim_turn_r = 1, double max_velocity = 1);
     ~PathPlanner();
+    // Modifies command to the optimal path command. Returns a vector of the length of time each command should be applied.
+    vector<double> get_optimal_time(string & commands);
     // Modifies the command string to the appropriate command and returns the duration of each command
     vector<double> find_optimal_path(string & commands);
     // Returns the length of the RSR path

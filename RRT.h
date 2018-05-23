@@ -1,8 +1,12 @@
 #ifndef RRT_H
 #define RRT_H
 
+#define _USE_MATH_DEFINES
+
 #include "Car.h"
 #include "PathPlanner.h"
+#include <random>
+#include <math.h>
 
 using namespace std;
 
@@ -16,17 +20,18 @@ public:
     // Deconstructor
     ~RRT();
     // Generates random Car postions in the boundaries of the configuration space
-    *Car Random_Car();
+    Car * Random_Car();
     // Finds the neerest Car in the tree to the input position
-    *Car find_nearest(Car end);
+    Car * find_nearest(Car end);
     // Expands the tree and checks if the added node is in the goal zone
     bool expand_tree();
     
     
     
-Private:
+private:
     double world_size, dt, r_goal;
     Car start, goal; 
+    
     
 
 };
